@@ -1,9 +1,8 @@
 package mcping
 
 import (
-    "errors"
+	"errors"
 )
-
 
 var resolveErr = errors.New("mcping: Could not resolve address")
 var connectErr = errors.New("mcping: Could not connect to host")
