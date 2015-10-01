@@ -1,6 +1,6 @@
 package mcping
 
-type MCPingResponse struct {
+type PingResponse struct {
 	Latency  uint   //Latency in ms
 	Online   int    //Amount of online players
 	Max      int    //Maximum amount of players

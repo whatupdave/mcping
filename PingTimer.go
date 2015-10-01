@@ -14,11 +14,11 @@ func getMS() uint64 {
 	return uint64(time.Now().UnixNano() / int64(time.Millisecond))
 }
 
-func (t PingTimer) Start() {
+func (t *PingTimer) Start() {
 	t.start = getMS()
 }
 
-func (t PingTimer) End() (latency uint64) {
+func (t *PingTimer) End() (latency uint64) {
 	t.end = getMS()
 	t.latency = t.end - t.start
 	latency = t.latency

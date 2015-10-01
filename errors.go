@@ -10,3 +10,7 @@ var varintErr = errors.New("mcping: Could not decode varint")
 var smallPacketErr = errors.New("mcping: Response too small")
 var bigPacketErr = errors.New("mcping: Response too large")
 var packetTypeErr = errors.New("mcping: Response packet type incorrect")
+
+//Exported errors
+
+var TimeoutErr = errors.New("mcping: Timeout occured")

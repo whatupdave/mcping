@@ -11,9 +11,9 @@ import (
 	"strings"
 )
 
-func Ping(host string, port uint16) (MCPingResponse, error) {
+func Ping(host string, port uint16) (PingResponse, error) {
 	//If things go south, send default struct w/ error
-	defaultResp := MCPingResponse{}
+	defaultResp := PingResponse{}
 
 	fullAddr := host + ":" + fmt.Sprint(port)
 	tcpAddr, err := net.ResolveTCPAddr("tcp", fullAddr)
@@ -109,8 +109,8 @@ func Ping(host string, port uint16) (MCPingResponse, error) {
 		playerSamples = append(playerSamples, sample)
 	}
 
-	//Assemble MCPingResponse
-	resp := MCPingResponse{}
+	//Assemble PingResponse
+	resp := PingResponse{}
 	resp.Latency = uint(latency)
 	resp.Online, _ = jq.Int("players", "online")
 	resp.Max, _ = jq.Int("players", "max")
