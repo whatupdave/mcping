@@ -24,7 +24,7 @@ func main() {
 The struct returned by the ``Ping()`` function has the following schema
 
 ```go
-type MCPingResponse struct {
+type PingResponse struct {
     Latency  uint   //Latency in ms
     Online   int    //Amount of online players
     Max      int    //Maximum amount of players
