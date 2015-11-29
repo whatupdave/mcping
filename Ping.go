@@ -119,8 +119,16 @@ func Ping(host string, port uint16) (PingResponse, error) {
 	resp.Motd, _ = jq.String("description")
 	versionStr, _ := jq.String("version", "name")
 	arr := strings.Split(versionStr, " ")
-	resp.Server = arr[0]
-	resp.Version = arr[1]
+	if(len(arr) == 0) {
+		resp.Server = "Unknown"
+		resp.Version = "Unknown"
+	} else if(len(arr) == 1) {
+		resp.Server = "Unknown"
+		resp.Version = arr[0]
+	} else if(len(arr) == 2) {
+		resp.Server = arr[0]
+		resp.Version = arr[1]
+	}
 	resp.Sample = playerSamples
 
 	return resp, nil
