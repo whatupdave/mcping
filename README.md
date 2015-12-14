@@ -3,7 +3,7 @@ A Golang library that facilitates Minecraft 1.7 server list pings.
 
 ## Install
 
-`` go get https://github.com/ammario/mcping``
+`` go get github.com/ammario/mcping``
 
 ## Usage
 ```go
