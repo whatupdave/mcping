@@ -11,6 +11,7 @@ package main
 
 import (
     "github.com/ammario/mcping"
+    "fmt"
 )
 
 func main() {
