@@ -9,24 +9,31 @@ import (
 	"github.com/jmoiron/jsonq"
 	"net"
 	"strings"
+	"time"
 )
 
+//Default timeout
 func Ping(host string, port uint16) (PingResponse, error) {
+	return ping(host, port, 1000)
+}
+
+//Custom timeout
+func PingTimeout(host string, port uint16, timeout int) (PingResponse, error) {
+	return ping(host, port, timeout)
+}
+
+func ping(host string, port uint16, timeout int) (PingResponse, error) {
 	//If things go south, send default struct w/ error
 	defaultResp := PingResponse{}
 
 	fullAddr := host + ":" + fmt.Sprint(port)
-	tcpAddr, err := net.ResolveTCPAddr("tcp", fullAddr)
-	if err != nil {
-		return defaultResp, resolveErr
-	}
 
 	//Start timer
 	timer := PingTimer{}
 	timer.Start()
 
 	//Connect
-	conn, err := net.DialTCP("tcp", nil, tcpAddr)
+	conn, err := net.DialTimeout("tcp", fullAddr, time.Millisecond * time.Duration(timeout))
 	if err != nil {
 		return defaultResp, connectErr
 	}
