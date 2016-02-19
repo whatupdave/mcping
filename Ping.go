@@ -33,7 +33,7 @@ func ping(host string, port uint16, timeout int) (PingResponse, error) {
 	timer.Start()
 
 	//Connect
-	conn, err := net.DialTimeout("tcp", fullAddr, time.Millisecond * time.Duration(timeout))
+	conn, err := net.DialTimeout("tcp", fullAddr, time.Millisecond*time.Duration(timeout))
 	if err != nil {
 		return defaultResp, connectErr
 	}
@@ -126,13 +126,13 @@ func ping(host string, port uint16, timeout int) (PingResponse, error) {
 	resp.Motd, _ = jq.String("description")
 	versionStr, _ := jq.String("version", "name")
 	arr := strings.Split(versionStr, " ")
-	if(len(arr) == 0) {
+	if len(arr) == 0 {
 		resp.Server = "Unknown"
 		resp.Version = "Unknown"
-	} else if(len(arr) == 1) {
+	} else if len(arr) == 1 {
 		resp.Server = "Unknown"
 		resp.Version = arr[0]
-	} else if(len(arr) == 2) {
+	} else if len(arr) == 2 {
 		resp.Server = arr[0]
 		resp.Version = arr[1]
 	}
