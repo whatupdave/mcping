@@ -4,13 +4,24 @@ import (
 	"errors"
 )
 
-var resolveErr = errors.New("mcping: Could not resolve address")
-var connectErr = errors.New("mcping: Could not connect to host")
-var varintErr = errors.New("mcping: Could not decode varint")
-var smallPacketErr = errors.New("mcping: Response too small")
-var bigPacketErr = errors.New("mcping: Response too large")
-var packetTypeErr = errors.New("mcping: Response packet type incorrect")
 
-//Exported errors
+//Could not resolve address
+var ErrResolve = errors.New("mcping: Could not resolve address")
 
-var TimeoutErr = errors.New("mcping: Timeout occured")
+//Could not connect to host
+var ErrConnect = errors.New("mcping: Could not connect to host")
+
+//Could not decode varint
+var ErrVarint = errors.New("mcping: Could not decode varint")
+
+//Response is too small
+var ErrSmallPacket = errors.New("mcping: Response too small")
+
+//Response is too large
+var ErrBigPacket = errors.New("mcping: Response too large")
+
+//Response packet incorrect
+var ErrPacketType = errors.New("mcping: Response packet type incorrect")
+
+//Timeout error
+var ErrTimeout = errors.New("mcping: Timeout occured")
