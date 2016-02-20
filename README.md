@@ -1,6 +1,8 @@
 # MCPing
 A Golang library that facilitates Minecraft 1.7 server list pings.
 
+[Godoc] (godoc.org/github.com/ammario/mcping)
+
 ## Install
 
 `` go get github.com/ammario/mcping``
@@ -15,7 +17,7 @@ import (
 )
 
 func main() {
-    resp, err := mcping.Ping("us.mineplex.com", 25565)
+    resp, err := mcping.Ping("us.mineplex.com:25565")
     fmt.Println("Mineplex has", resp.Online, "players online")
 }
 ```
