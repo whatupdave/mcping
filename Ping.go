@@ -1,3 +1,4 @@
+//mcping facilitates the pinging of Minecraft servers using the 1.7+ protocol. 
 package mcping
 
 import (
@@ -5,37 +6,41 @@ import (
 	"bytes"
 	"encoding/binary"
 	"encoding/json"
-	"fmt"
 	"github.com/jmoiron/jsonq"
 	"net"
 	"strings"
+	"strconv"
 	"time"
 )
 
-//Default timeout
-func Ping(host string, port uint16) (PingResponse, error) {
-	return ping(host, port, 1000)
+const (
+	//Default ping timeout
+	DEFAULT_TIMEOUT = 1000
+)
+
+//Pings with default timeout
+func Ping(addr string) (PingResponse, error) {
+	return ping(addr, DEFAULT_TIMEOUT)
 }
 
-//Custom timeout
-func PingTimeout(host string, port uint16, timeout int) (PingResponse, error) {
-	return ping(host, port, timeout)
+//Pings with custom timeout
+func PingTimeout(addr string, timeout int) (PingResponse, error) {
+	return ping(addr, timeout)
 }
 
-func ping(host string, port uint16, timeout int) (PingResponse, error) {
-	//If things go south, send default struct w/ error
-	defaultResp := PingResponse{}
-
-	fullAddr := host + ":" + fmt.Sprint(port)
+func ping(addr string, timeout int) (PingResponse, error) {
+	var host string
+	var port uint16
+	var resp PingResponse
 
 	//Start timer
-	timer := PingTimer{}
+	timer := pingTimer{}
 	timer.Start()
 
 	//Connect
-	conn, err := net.DialTimeout("tcp", fullAddr, time.Millisecond*time.Duration(timeout))
+	conn, err := net.DialTimeout("tcp", addr, time.Millisecond*time.Duration(timeout))
 	if err != nil {
-		return defaultResp, connectErr
+		return resp, ErrConnect
 	}
 
 	connReader := bufio.NewReader(conn)
@@ -46,6 +51,19 @@ func ping(host string, port uint16, timeout int) (PingResponse, error) {
 
 	dataBuf.Write([]byte("\x00")) //Packet ID
 	dataBuf.Write([]byte("\x04")) //Protocol Version 47
+
+
+	if addrTokens := strings.Split(addr, ":"); len(addrTokens) != 2 {
+		return resp, ErrAddress
+	} else {
+		host = addrTokens[0]
+		if intport, err := strconv.Atoi(addrTokens[1]); err != nil {
+			return resp, err
+		} else {
+			port = uint16(intport)
+		}
+	}
+
 
 	//Write host string length + host
 	hostLength := uint8(len(host))
@@ -70,21 +88,21 @@ func ping(host string, port uint16, timeout int) (PingResponse, error) {
 	//Get situationally useless full byte length
 	binary.ReadUvarint(connReader)
 
-	//Packet type 0 means we're good to recieve ping
+	//Packet type 0 means we're good to receive ping
 	packetType, _ := connReader.ReadByte()
 	if bytes.Compare([]byte{packetType}, []byte("\x00")) != 0 {
-		return defaultResp, packetTypeErr
+		return resp, ErrPacketType
 	}
 
 	//Get data length via Varint
 	length, err := binary.ReadUvarint(connReader)
 	if err != nil {
-		return defaultResp, varintErr
+		return resp, ErrVarint
 	}
 	if length < 10 {
-		return defaultResp, smallPacketErr
+		return resp, ErrSmallPacket
 	} else if length > 700000 {
-		return defaultResp, bigPacketErr
+		return resp, ErrBigPacket
 	}
 
 	//Recieve json buffer
@@ -117,7 +135,6 @@ func ping(host string, port uint16, timeout int) (PingResponse, error) {
 	}
 
 	//Assemble PingResponse
-	resp := PingResponse{}
 	resp.Latency = uint(latency)
 	resp.Online, _ = jq.Int("players", "online")
 	resp.Max, _ = jq.Int("players", "max")

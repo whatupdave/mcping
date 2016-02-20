@@ -4,6 +4,8 @@ import (
 	"errors"
 )
 
+//Could not parse address
+var ErrAddress = errors.New("mcping: could not parse address")
 
 //Could not resolve address
 var ErrResolve = errors.New("mcping: Could not resolve address")
