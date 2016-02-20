@@ -137,7 +137,10 @@ func ping(addr string, timeout int) (PingResponse, error) {
 	resp.Online, _ = jq.Int("players", "online")
 	resp.Max, _ = jq.Int("players", "max")
 	resp.Protocol, _ = jq.Int("version", "protocol")
-	resp.Favicon, _ = []byte(jq.String("favicon"))
+
+	favicon, _ := jq.String("favicon")
+	resp.Favicon = []byte(favicon)
+	
 	resp.Motd, _ = jq.String("description")
 	versionStr, _ := jq.String("version", "name")
 	arr := strings.Split(versionStr, " ")
