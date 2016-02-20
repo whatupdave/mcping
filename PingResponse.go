@@ -1,6 +1,5 @@
 package mcping
 
-
 //PingResponse contains all known fields of the ping response packet
 type PingResponse struct {
 	Latency  uint   //Latency in ms

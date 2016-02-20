@@ -1,4 +1,4 @@
-//mcping facilitates the pinging of Minecraft servers using the 1.7+ protocol. 
+//Package mcping facilitates the pinging of Minecraft servers using the 1.7+ protocol.
 package mcping
 
 import (
@@ -8,22 +8,22 @@ import (
 	"encoding/json"
 	"github.com/jmoiron/jsonq"
 	"net"
-	"strings"
 	"strconv"
+	"strings"
 	"time"
 )
 
 const (
-	//Default ping timeout
+	//DEFAULT_TIMEOUT stores default ping timeout
 	DEFAULT_TIMEOUT = 1000
 )
 
-//Pings with default timeout
+//Ping Pings with default timeout
 func Ping(addr string) (PingResponse, error) {
 	return ping(addr, DEFAULT_TIMEOUT)
 }
 
-//Pings with custom timeout
+//PingTimeout Pings with custom timeout
 func PingTimeout(addr string, timeout int) (PingResponse, error) {
 	return ping(addr, timeout)
 }
@@ -52,18 +52,16 @@ func ping(addr string, timeout int) (PingResponse, error) {
 	dataBuf.Write([]byte("\x00")) //Packet ID
 	dataBuf.Write([]byte("\x04")) //Protocol Version 47
 
-
-	if addrTokens := strings.Split(addr, ":"); len(addrTokens) != 2 {
-		return resp, ErrAddress
-	} else {
+	if addrTokens := strings.Split(addr, ":"); len(addrTokens) == 2 {
 		host = addrTokens[0]
-		if intport, err := strconv.Atoi(addrTokens[1]); err != nil {
-			return resp, err
-		} else {
+		if intport, err := strconv.Atoi(addrTokens[1]); err == nil {
 			port = uint16(intport)
+		} else {
+			return resp, err
 		}
+	} else {
+		return resp, ErrAddress
 	}
-
 
 	//Write host string length + host
 	hostLength := uint8(len(host))
@@ -127,7 +125,7 @@ func ping(addr string, timeout int) (PingResponse, error) {
 	//Assemble PlayerSample
 	playerSampleMap, err := jq.ArrayOfObjects("players", "sample")
 	playerSamples := []PlayerSample{}
-	for k, _ := range playerSampleMap {
+	for k := range playerSampleMap {
 		sample := PlayerSample{}
 		sample.UUID = playerSampleMap[k]["id"].(string)
 		sample.Name = playerSampleMap[k]["name"].(string)
