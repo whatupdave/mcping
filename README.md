@@ -1,7 +1,7 @@
 # MCPing
 A Golang library that facilitates Minecraft 1.7 server list pings.
 
-[Godoc] (godoc.org/github.com/ammario/mcping)
+[Godoc] (https://godoc.org/github.com/ammario/mcping)
 
 ## Install
 
