@@ -39,6 +39,7 @@ func ping(addr string, timeout int) (PingResponse, error) {
 
 	//Connect
 	conn, err := net.DialTimeout("tcp", addr, time.Millisecond*time.Duration(timeout))
+	defer conn.Close()
 	if err != nil {
 		return resp, ErrConnect
 	}
