@@ -45,7 +45,7 @@ func ping(addr string, timeout time.Duration) (PingResponse, error) {
 	//Connect
 	conn, err := net.DialTimeout("tcp", addr, timeout)
 	if err != nil {
-		return resp, ErrConnect
+		return resp, err
 	}
 	defer conn.Close()
 
@@ -102,7 +102,7 @@ func ping(addr string, timeout time.Duration) (PingResponse, error) {
 	//Get data length via Varint
 	length, err := binary.ReadUvarint(connReader)
 	if err != nil {
-		return resp, ErrVarint
+		return resp, err
 	}
 	if length < 10 {
 		return resp, ErrSmallPacket
