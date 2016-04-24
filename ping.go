@@ -30,7 +30,7 @@ func PingWithTimeout(addr string, timeout time.Duration) (PingResponse, error) {
 
 //Deprecated: PingTimeout Pings with custom timeout
 func PingTimeout(addr string, timeout int) (PingResponse, error) {
-	return ping(addr, time.Duration(timeout))
+	return ping(addr, time.Millisecond * time.Duration(timeout))
 }
 
 func ping(addr string, timeout time.Duration) (PingResponse, error) {
