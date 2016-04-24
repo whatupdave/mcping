@@ -10,12 +10,6 @@ var ErrAddress = errors.New("mcping: could not parse address")
 //ErrResolve -. Could not resolve address
 var ErrResolve = errors.New("mcping: Could not resolve address")
 
-//ErrConnect -> Could not connect to host
-var ErrConnect = errors.New("mcping: Could not connect to host")
-
-//ErrVarint -> Could not decode varint
-var ErrVarint = errors.New("mcping: Could not decode varint")
-
 //ErrSmallPacket -> Response is too small
 var ErrSmallPacket = errors.New("mcping: Response too small")
 
