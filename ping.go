@@ -24,7 +24,7 @@ func Ping(addr string) (PingResponse, error) {
 }
 
 //PingWithTimeout pings with custom timeout
-func PingWithTimeout(addr string, timeout time.Duration) {
+func PingWithTimeout(addr string, timeout time.Duration) (PingResponse, error) {
 	return ping(addr, timeout)
 }
 
