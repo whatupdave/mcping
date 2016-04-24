@@ -14,21 +14,26 @@ import (
 )
 
 const (
-	//DEFAULT_TIMEOUT stores default ping timeout
-	DEFAULT_TIMEOUT = 1000
+	//DefaultTimeout stores default ping timeout
+	DefaultTimeout = time.Second
 )
 
-//Ping Pings with default timeout
+//Ping pings with default timeout
 func Ping(addr string) (PingResponse, error) {
-	return ping(addr, DEFAULT_TIMEOUT)
+	return ping(addr, DefaultTimeout)
 }
 
-//PingTimeout Pings with custom timeout
-func PingTimeout(addr string, timeout int) (PingResponse, error) {
+//PingWithTimeout pings with custom timeout
+func PingWithTimeout(addr string, timeout time.Duration) {
 	return ping(addr, timeout)
 }
 
-func ping(addr string, timeout int) (PingResponse, error) {
+//Deprecated: PingTimeout Pings with custom timeout
+func PingTimeout(addr string, timeout int) (PingResponse, error) {
+	return ping(addr, time.Duration(timeout))
+}
+
+func ping(addr string, timeout time.Duration) (PingResponse, error) {
 	var host string
 	var port uint16
 	var resp PingResponse
@@ -38,7 +43,7 @@ func ping(addr string, timeout int) (PingResponse, error) {
 	timer.Start()
 
 	//Connect
-	conn, err := net.DialTimeout("tcp", addr, time.Millisecond*time.Duration(timeout))
+	conn, err := net.DialTimeout("tcp", addr, timeout)
 	if err != nil {
 		return resp, ErrConnect
 	}
@@ -52,7 +57,7 @@ func ping(addr string, timeout int) (PingResponse, error) {
 	var finBuf bytes.Buffer
 
 	dataBuf.Write([]byte("\x00")) //Packet ID
-	dataBuf.Write([]byte("\x04")) //Protocol Version 47
+	dataBuf.Write([]byte("\x6D")) //1.9 protocol
 
 	if addrTokens := strings.Split(addr, ":"); len(addrTokens) == 2 {
 		host = addrTokens[0]
